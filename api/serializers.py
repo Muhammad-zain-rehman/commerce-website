@@ -21,7 +21,7 @@ class CategorySerializer(serializers.ModelSerializer):
         return instance
 
 class ProductSerializer(serializers.ModelSerializer):
-    category_name = serializers.SerializerMethodField(method_name='get_category_name')
+    category = serializers.SerializerMethodField(method_name='get_category_name')
     category = serializers.IntegerField()
     title = serializers.CharField()
     author = serializers.CharField()
@@ -37,14 +37,14 @@ class ProductSerializer(serializers.ModelSerializer):
     updated = serializers.DateTimeField()
 
     class Meta:
-        models = Product
+        model = Product
         fields = ['id', 'category', 'title', 'author', 'description', 'slug', 'price', 'in_stock', 'is_active', 'created',
                   'updated']
         extra_kwargs = {
             'price': {'max_digits': 16, 'decimal_places': 2}
         }
 
-    def get_category_name(self, obj):
+    def get_category(self, obj):
         try:
             return obj.category.slug
         except:
