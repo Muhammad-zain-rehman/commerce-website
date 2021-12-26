@@ -11,7 +11,7 @@ class Category(models.Model):
     # permission_classes = [IsSuperUserCanAccess]
 
     name = models.CharField(max_length=255, db_index=True)
-    slug = models.SlugField(max_length=255, unique=True)
+    slug = models.SlugField(max_length=255, unique=True,)
 
     class Meta:
         verbose_name_plural = 'categories'
@@ -25,7 +25,7 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    category = models.ForeignKey(Category, to_field='id', on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, to_field='id', on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
     description = models.TextField(blank=True)

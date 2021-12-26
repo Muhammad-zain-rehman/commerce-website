@@ -9,7 +9,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id, name', 'slug']
+        fields = ['id', 'name', 'slug']
 
     def create(self, validated_data):
         return Category.objects.create(**validated_data)
@@ -20,9 +20,10 @@ class CategorySerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+
 class ProductSerializer(serializers.ModelSerializer):
+    category = serializers.IntegerField(write_only=True)
     category_name = serializers.SerializerMethodField(method_name='get_category_name')
-    category = serializers.IntegerField()
     title = serializers.CharField()
     author = serializers.CharField()
     description = serializers.CharField()
@@ -37,16 +38,16 @@ class ProductSerializer(serializers.ModelSerializer):
     updated = serializers.DateTimeField()
 
     class Meta:
-        models = Product
-        fields = ['id', 'category', 'title', 'author', 'description', 'slug', 'price', 'in_stock', 'is_active', 'created',
-                  'updated']
+        model = Product
+        fields = ['id', 'category', 'category_name', 'title', 'author', 'description','image', 'slug', 'price', 'in_stock', 'is_active',
+                  'created', 'updated']
         extra_kwargs = {
             'price': {'max_digits': 16, 'decimal_places': 2}
         }
 
     def get_category_name(self, obj):
         try:
-            return obj.category.slug
+            return obj.category.name
         except:
             None
 
